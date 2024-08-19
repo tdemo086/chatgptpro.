@@ -7,6 +7,7 @@ body, html {
     background: linear-gradient(270deg, #ff9966, #ff5e62);
    background-size: 400% 400%;
    animation: gradientAnimation 15s ease infinite;
+    height: 100%;
 }
 
 @keyframes gradientAnimation {
@@ -157,4 +158,10 @@ input[type="text"], input[type="email"], input[type="password"] {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
+}
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  height: 100px; /* Adjust to your footer size */
 }
