@@ -1,127 +1,106 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField, FileField
+from wtforms.validators import DataRequired, Email
 import firebase_admin
-from firebase_admin import credentials, db
-from werkzeug.security import generate_password_hash, check_password_hash
+from firebase_admin import credentials, firestore
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # For session management
+app.secret_key = 'your_secret_key'
 
-# Initialize Firebase Admin SDK
-cred = credentials.Certificate("serviceAccountKey.json")  
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://tdemo-d2f6e-default-rtdb.asia-southeast1.firebasedatabase.app/'
-})
+# Firebase setup
+cred = credentials.Certificate('path/to/firebase-adminsdk.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
+# Forms
+class SignupForm(FlaskForm):
+    name = StringField('Full Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    mobile = StringField('Mobile Number', validators=[DataRequired()])
+    whatsapp = StringField('WhatsApp Number', validators=[DataRequired()])
+    bkash = StringField('Bkash/Nagad Number', validators=[DataRequired()])
+    facebook = StringField('Facebook ID', validators=[DataRequired()])
+    dob = StringField('Date of Birth', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    profile_picture = FileField('Profile Picture')
+    submit = SubmitField('Signup')
+
+class SigninForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Signin')
+
+# Routes
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/work', methods=['GET', 'POST'])
+@app.route('/work')
 def work():
-    if request.method == 'POST':
-        task_id = request.json.get('task_id')
-        
-        if 'logged_in' in session:
-            user_id = session['user']['id']  # Or however you track user ID
-            ref = db.reference(f'users/{user_id}')
-            user = ref.get()
-            
-            if not user:
-                return jsonify({'success': False, 'message': 'User not found'}), 404
-            
-            # Update user's points or task status
-            new_points = user.get('points', 0) + 50  # Add points or adjust as needed
-            ref.update({'points': new_points})
-            
-            return jsonify({'success': True, 'points': new_points})
-        else:
-            return jsonify({'success': False, 'message': 'Not logged in'}), 403
-
-    # Handle GET request for the work page
     return render_template('work.html')
-
 
 @app.route('/profile')
 def profile():
-    if 'logged_in' in session:
-        user = session['user']
-        return render_template('profile.html', user=user)
-    else:
-        return redirect(url_for('login'))
+    if 'user' not in session:
+        return redirect(url_for('signin'))
+    user_data = session['user']
+    return render_template('profile.html', user=user_data)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    try:
-        if request.method == 'POST':
-            email = request.form['email']
-            password = request.form['password']
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = SignupForm()
+    if form.validate_on_submit():
+        user_data = {
+            'name': form.name.data,
+            'email': form.email.data,
+            'mobile': form.mobile.data,
+            'whatsapp': form.whatsapp.data,
+            'bkash': form.bkash.data,
+            'facebook': form.facebook.data,
+            'dob': form.dob.data,
+            'password': form.password.data  # Ensure to hash this in production
+        }
 
-            ref = db.reference('users')
-            users = ref.get()
+        # Save profile picture
+        if form.profile_picture.data:
+            filename = secure_filename(form.profile_picture.data.filename)
+            picture_path = os.path.join('static/images', filename)
+            form.profile_picture.data.save(picture_path)
+            user_data['profile_picture'] = filename
 
-            if not users:
-                return 'No users found in the database'
+        # Save to Firebase
+        db.collection('users').add(user_data)
+        flash('Signup successful! You can now log in.', 'success')
+        return redirect(url_for('signin'))
 
-            for user_key, user_data in users.items():
-                if user_data['email'] == email and check_password_hash(user_data['password'], password):
-                    session['logged_in'] = True
-                    session['user'] = user_data
-                    return redirect(url_for('home'))
+    return render_template('signup.html', form=form)
 
-            return 'Invalid credentials'
-        return render_template('login.html')
-    except Exception as e:
-        return str(e)
+@app.route('/signin', methods=['GET', 'POST'])
+def signin():
+    form = SigninForm()
+    if form.validate_on_submit():
+        user_ref = db.collection('users').where('email', '==', form.email.data).get()
+        if user_ref:
+            user_data = user_ref[0].to_dict()
+            if user_data['password'] == form.password.data:
+                session['user'] = user_data
+                flash('Signin successful!', 'success')
+                return redirect(url_for('profile'))
+            else:
+                flash('Invalid credentials', 'danger')
+        else:
+            flash('User not found', 'danger')
 
+    return render_template('signin.html', form=form)
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
     session.pop('user', None)
-    return redirect(url_for('login'))
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = generate_password_hash(request.form['password'])
-        mobile_number = request.form['mobile_number']
-        bkash_nagad_number = request.form['bkash_nagad_number']
-
-        # Firebase Realtime Database logic to save user data
-        ref = db.reference('users')
-        ref.push({
-            'username': username,
-            'email': email,
-            'password': password,
-            'mobile_number': mobile_number,
-            'bkash_nagad_number': bkash_nagad_number,
-            'points': 0
-        })
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-@app.route('/page1')
-def page1():
-    return render_template('page1.html')
-
-@app.route('/page2')
-def page2():
-    return render_template('page2.html')
-
-@app.route('/page3')
-def page3():
-    return render_template('page3.html')
-
-@app.route('/page4')
-def page4():
-    return render_template('page4.html')
-
-@app.route('/level')
-def level():
-    return render_template('level.html')
+    flash('Logged out successfully!', 'success')
+    return redirect(url_for('signin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
-
