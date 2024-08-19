@@ -58,47 +58,51 @@ def profile():
 def signup():
     form = SignupForm()
     if form.validate_on_submit():
-        user_data = {
-            'name': form.name.data,
-            'email': form.email.data,
-            'mobile': form.mobile.data,
-            'whatsapp': form.whatsapp.data,
-            'bkash': form.bkash.data,
-            'facebook': form.facebook.data,
-            'dob': form.dob.data,
-            'password': form.password.data  # Ensure to hash this in production
-        }
+        try:
+            user_data = {
+                'name': form.name.data,
+                'email': form.email.data,
+                'mobile': form.mobile.data,
+                'whatsapp': form.whatsapp.data,
+                'bkash': form.bkash.data,
+                'facebook': form.facebook.data,
+                'dob': form.dob.data,
+                'password': form.password.data  # Ensure to hash this in production
+            }
 
-        # Save profile picture
-        if form.profile_picture.data:
-            filename = secure_filename(form.profile_picture.data.filename)
-            picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            form.profile_picture.data.save(picture_path)
-            user_data['profile_picture'] = filename
+            # Save profile picture
+            if form.profile_picture.data:
+                filename = secure_filename(form.profile_picture.data.filename)
+                picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                form.profile_picture.data.save(picture_path)
+                user_data['profile_picture'] = filename
 
-        # Save to Firebase
-        db.collection('users').add(user_data)
-        flash('Signup successful! You can now log in.', 'success')
-        return redirect(url_for('signin'))
-
+            # Save to Firebase
+            db.collection('users').add(user_data)
+            flash('Signup successful! You can now log in.', 'success')
+            return redirect(url_for('signin'))
+        except Exception as e:
+            flash(f'Error occurred: {str(e)}', 'danger')
     return render_template('signup.html', form=form)
 
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
     form = SigninForm()
     if form.validate_on_submit():
-        user_ref = db.collection('users').where('email', '==', form.email.data).get()
-        if user_ref:
-            user_data = user_ref[0].to_dict()
-            if user_data['password'] == form.password.data:
-                session['user'] = user_data
-                flash('Signin successful!', 'success')
-                return redirect(url_for('profile'))
+        try:
+            user_ref = db.collection('users').where('email', '==', form.email.data).get()
+            if user_ref:
+                user_data = user_ref[0].to_dict()
+                if user_data['password'] == form.password.data:
+                    session['user'] = user_data
+                    flash('Signin successful!', 'success')
+                    return redirect(url_for('profile'))
+                else:
+                    flash('Invalid credentials', 'danger')
             else:
-                flash('Invalid credentials', 'danger')
-        else:
-            flash('User not found', 'danger')
-
+                flash('User not found', 'danger')
+        except Exception as e:
+            flash(f'Error occurred: {str(e)}', 'danger')
     return render_template('signin.html', form=form)
 
 @app.route('/logout')
