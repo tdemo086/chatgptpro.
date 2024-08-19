@@ -1,18 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="profile">
-        <h1>User Profile</h1>
-        <div class="profile-pic">
-            <!-- You would replace the following with actual profile picture URL -->
-            <img src="{{ url_for('static', filename='default-profile.jpg') }}" alt="Profile Picture">
-        </div>
-        <p>Username: {{ user_info.username }}</p>
-        <p>Email: {{ user_info.email }}</p>
-        <p>Mobile: {{ user_info.mobile }}</p>
-        <p>Payment Method: {{ user_info.payment_method }}</p>
-        <p>Points: {{ points }}</p>
-        <p>Referral Link: <a href="{{ refer_link }}" target="_blank">{{ refer_link }}</a></p>
-    </section>
+    <h1>Profile</h1>
+    <img src="{{ url_for('static', filename='profile_pic.jpg') }}" alt="Profile Picture" class="profile-pic">
+    <p>Username: {{ user_info.username }}</p>
+    <p>Email: {{ user_info.email }}</p>
+    <p>Mobile: {{ user_info.mobile }}</p>
+    <p>Payment Method: {{ user_info.payment_method }}</p>
+    <!-- Add more user details here -->
 {% endblock %}
 
