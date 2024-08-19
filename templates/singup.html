@@ -1,41 +1,79 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Signup - EarniFy{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<h2 class="text-center">Signup</h2>
-<form method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        {{ form.name.label }}{{ form.name(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.email.label }}{{ form.email(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.mobile.label }}{{ form.mobile(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.whatsapp.label }}{{ form.whatsapp(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.bkash.label }}{{ form.bkash(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.facebook.label }}{{ form.facebook(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.dob.label }}{{ form.dob(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.password.label }}{{ form.password(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.profile_picture.label }}{{ form.profile_picture(class="form-control-file") }}
-    </div>
-    <div class="text-center">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
-</form>
-<p class="text-center mt-3">Already have an account? <a href="{{ url_for('signin') }}">Signin here</a>.</p>
+<div class="container mt-5">
+    <h2 class="text-center">Sign Up</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.mobile.label(class="form-label") }}
+            {{ form.mobile(class="form-control") }}
+            {% for error in form.mobile.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.whatsapp.label(class="form-label") }}
+            {{ form.whatsapp(class="form-control") }}
+            {% for error in form.whatsapp.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.bkash.label(class="form-label") }}
+            {{ form.bkash(class="form-control") }}
+            {% for error in form.bkash.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.facebook.label(class="form-label") }}
+            {{ form.facebook(class="form-control") }}
+            {% for error in form.facebook.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.dob.label(class="form-label") }}
+            {{ form.dob(class="form-control") }}
+            {% for error in form.dob.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.profile_picture.label(class="form-label") }}
+            {{ form.profile_picture(class="form-control-file") }}
+            {% for error in form.profile_picture.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+        <p class="text-center">Already have an account? <a href="{{ url_for('signin') }}">Sign In</a></p>
+    </form>
+</div>
 {% endblock %}
