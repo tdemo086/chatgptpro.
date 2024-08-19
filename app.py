@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import firebase_admin
 from firebase_admin import credentials, db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # For session management
@@ -41,7 +42,7 @@ def login():
         users = ref.get()
 
         for user_key, user_data in users.items():
-            if user_data['email'] == email and user_data['password'] == password:
+            if user_data['email'] == email and check_password_hash(user_data['password'], password):
                 session['logged_in'] = True
                 session['user'] = user_data
                 return redirect(url_for('home'))
@@ -60,7 +61,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        password = request.form['password']
+        password = generate_password_hash(request.form['password'])
         mobile_number = request.form['mobile_number']
         bkash_nagad_number = request.form['bkash_nagad_number']
 
@@ -99,7 +100,4 @@ def level():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
 
