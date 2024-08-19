@@ -4,7 +4,7 @@ body, html {
     padding: 0;
     font-family: Arial, sans-serif;
     color: #333;
-    background: linear-gradient(270deg, #ff9966, #ff5e62);
+    background: linear-gradient(270deg, #ff97423, #ff3e48);
    background-size: 400% 400%;
    animation: gradientAnimation 15s ease infinite;
     height: 100%;
