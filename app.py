@@ -33,22 +33,28 @@ def profile():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+    try:
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
 
-        # Firebase Realtime Database logic to authenticate user
-        ref = db.reference('users')
-        users = ref.get()
+            ref = db.reference('users')
+            users = ref.get()
 
-        for user_key, user_data in users.items():
-            if user_data['email'] == email and check_password_hash(user_data['password'], password):
-                session['logged_in'] = True
-                session['user'] = user_data
-                return redirect(url_for('home'))
+            if not users:
+                return 'No users found in the database'
 
-        return 'Invalid credentials'
-    return render_template('login.html')
+            for user_key, user_data in users.items():
+                if user_data['email'] == email and check_password_hash(user_data['password'], password):
+                    session['logged_in'] = True
+                    session['user'] = user_data
+                    return redirect(url_for('home'))
+
+            return 'Invalid credentials'
+        return render_template('login.html')
+    except Exception as e:
+        return str(e)
+
 
 @app.route('/logout')
 def logout():
