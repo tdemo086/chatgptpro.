@@ -16,9 +16,29 @@ firebase_admin.initialize_app(cred, {
 def home():
     return render_template('home.html')
 
-@app.route('/work')
+@app.route('/work', methods=['GET', 'POST'])
 def work():
-        return render_template('work.html')
+    if request.method == 'POST':
+        task_id = request.json.get('task_id')
+        
+        if 'logged_in' in session:
+            user_id = session['user']['id']  # Or however you track user ID
+            ref = db.reference(f'users/{user_id}')
+            user = ref.get()
+            
+            if not user:
+                return jsonify({'success': False, 'message': 'User not found'}), 404
+            
+            # Update user's points or task status
+            new_points = user.get('points', 0) + 50  # Add points or adjust as needed
+            ref.update({'points': new_points})
+            
+            return jsonify({'success': True, 'points': new_points})
+        else:
+            return jsonify({'success': False, 'message': 'Not logged in'}), 403
+
+    # Handle GET request for the work page
+    return render_template('work.html')
 
 
 @app.route('/profile')
