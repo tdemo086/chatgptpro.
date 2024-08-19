@@ -18,10 +18,8 @@ def home():
 
 @app.route('/work')
 def work():
-    if 'logged_in' in session:
         return render_template('work.html')
-    else:
-        return redirect(url_for('login'))
+
 
 @app.route('/profile')
 def profile():
