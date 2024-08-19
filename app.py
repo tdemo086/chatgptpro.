@@ -83,6 +83,7 @@ def signup():
             return redirect(url_for('signin'))
         except Exception as e:
             flash(f'Error occurred: {str(e)}', 'danger')
+            app.logger.error(f'Error during signup: {str(e)}')
     return render_template('signup.html', form=form)
 
 @app.route('/signin', methods=['GET', 'POST'])
@@ -103,6 +104,7 @@ def signin():
                 flash('User not found', 'danger')
         except Exception as e:
             flash(f'Error occurred: {str(e)}', 'danger')
+            app.logger.error(f'Error during signin: {str(e)}')
     return render_template('signin.html', form=form)
 
 @app.route('/logout')
