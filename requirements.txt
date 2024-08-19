@@ -1,7 +1,7 @@
-Flask
-gunicorn
-firebase-admin
-werkzeug
-Flask-WTF
+Flask==2.3.2
+Flask-WTF==1.1.1
+WTForms==3.0.1
+firebase-admin==6.2.0
+Werkzeug==2.3.6
 
 
