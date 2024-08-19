@@ -3,38 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}GemMine{% endblock %}</title>
+    <title>EarniFy</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('mining') }}">Mining</a></li>
-            <li><a href="{{ url_for('collection') }}">Collection</a></li>
-            <li><a href="{{ url_for('marketplace') }}">Marketplace</a></li>
-            <li><a href="{{ url_for('profile') }}">Profile</a></li>
-            {% if current_user.is_authenticated %}
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('work') }}">Work</a></li>
+                <li><a href="{{ url_for('profile') }}">Profile</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            {% else %}
-                <li><a href="{{ url_for('login') }}">Login</a></li>
-                <li><a href="{{ url_for('register') }}">Register</a></li>
-            {% endif %}
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    </header>
+
     <main>
-        {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            <div class="flashes">
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
-            </div>
-        {% endif %}
-        {% endwith %}
         {% block content %}{% endblock %}
     </main>
+
+    <footer>
+        <p>&copy; 2024 EarniFy. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
+
 
 
