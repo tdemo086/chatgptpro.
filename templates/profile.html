@@ -1,26 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile - GemMine{% endblock %}
-
 {% block content %}
-<section class="profile">
-    <h2>Your Profile</h2>
-    <p>Track your achievements and see how far you've come in your gem mining adventure.</p>
-    <div class="achievement-grid">
-        <!-- Example achievement items -->
-        <div class="achievement-item">
-            <p>First Gem</p>
-            <p><small>Unlocked: Date</small></p>
-        </div>
-        <div class="achievement-item">
-            <p>100 Gems Mined</p>
-            <p><small>Unlocked: Date</small></p>
-        </div>
-        <div class="achievement-item">
-            <p>First Trade</p>
-            <p><small>Unlocked: Date</small></p>
-        </div>
-        <!-- Add more achievements as needed -->
-    </div>
-</section>
+    <section class="profile">
+        <h1>User Profile</h1>
+        <div class="profile-pic"></div>
+        <p>Name: John Doe</p>
+        <p>Email: john@example.com</p>
+        <p>Points: 1500</p>
+        <button onclick="location.href='{{ url_for('level') }}'">View Levels</button>
+    </section>
 {% endblock %}
+
