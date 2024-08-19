@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
+    height: 100vh;
 }
 
 a {
@@ -43,6 +44,8 @@ nav ul li a {
     color: white;
     font-weight: bold;
     font-size: 1.1rem;
+    padding: 5px;
+    bordeer: 2px solid skyblue;
 }
 
 /* Main Content */
@@ -133,4 +136,102 @@ button:hover {
     background-color: #1a1a1a;
     color: white;
     font-size: 0.9rem;
+}
+
+
+section {
+    padding: 20px;
+}
+
+h2 {
+    color: #333;
+}
+
+/* Mining Page */
+.mining-container {
+    text-align: center;
+}
+
+#start-mining {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#start-mining:hover {
+    background-color: #45a049;
+}
+
+#mining-progress {
+    margin: 20px auto;
+    width: 80%;
+    background-color: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    height: 20px;
+    width: 0;
+    background-color: #4CAF50;
+    transition: width 2s ease;
+}
+
+#gem-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#gem-list li {
+    background: #f4f4f4;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Collection Page */
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.gem-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.gem-item:hover {
+    background: #f0f0f0;
+}
+
+/* Marketplace Page */
+.marketplace-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.marketplace-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.marketplace-item:hover {
+    background: #f0f0f0;
 }
