@@ -1,19 +1,54 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <h1>Register</h1>
-    <form method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <label for="mobile">Mobile Number:</label>
-        <input type="text" id="mobile" name="mobile" required>
-        <label for="payment_method">Payment Method (Bkash/Nagad):</label>
-        <input type="text" id="payment_method" name="payment_method" required>
-        <button type="submit">Register</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+    <form method="POST" action="{{ url_for('register') }}">
+        {{ form.hidden_tag() }}
+        
+        <div>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.email.label }}<br>
+            {{ form.email(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.mobile_number.label }}<br>
+            {{ form.mobile_number(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.bkash_number.label }}<br>
+            {{ form.bkash_number(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.nagad_number.label }}<br>
+            {{ form.nagad_number(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.confirm_password.label }}<br>
+            {{ form.confirm_password(size=32) }}<br>
+        </div>
+        
+        <div>
+            {{ form.submit() }}
+        </div>
     </form>
-{% endblock %}
+</body>
+</html>
 
