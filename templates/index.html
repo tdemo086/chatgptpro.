@@ -5,9 +5,8 @@
 {% block content %}
 <section class="dashboard">
     <h2>Welcome to GemMine!</h2>
-    <p>Start your adventure by mining for gems, collecting treasures, and trading with others.hello baccho kiya halchal badair</p>
-    <div class="mining-info">
-        <p><a href="{{ url_for('mining') }}">Start Mining</a></p>
-    </div>
+    <p>Start your adventure by mining for gems, collecting treasures, and trading with others.</p>
+    <button onclick="location.href='{{ url_for('mining') }}'">Start Mining</button>
 </section>
 {% endblock %}
+
