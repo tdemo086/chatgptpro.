@@ -1,39 +1,30 @@
-{% extends 'base.html' %}
+@app.route('/task/<task_id>', methods=['POST'])
+def complete_task(task_id):
+    if 'logged_in' not in session:
+        return jsonify({'success': False, 'message': 'User not logged in'}), 403
 
-{% block content %}
-    <section class="tasks">
-        <h1>Available Tasks</h1>
-        <p>Lorem ipsum tasks descriptions.</p>
-        <ul>
-            <li>Task 1: Lorem ipsum dolor sit.</li>
-            <button onclick="completeTask('task1')">Complete Task 1</button>
-            <li>Task 2: Lorem ipsum dolor sit.</li>
-            <button onclick="completeTask('task2')">Complete Task 2</button>
-            <li>Task 3: Lorem ipsum dolor sit.</li>
-            <button onclick="completeTask('task3')">Complete Task 3</button>
-            <li>Task 4: Lorem ipsum dolor sit.</li>
-            <button onclick="completeTask('task4')">Complete Task 4</button>
-            <li>Task 5: Lorem ipsum dolor sit.</li>
-            <button onclick="completeTask('task5')">Complete Task 5</button>
-        </ul>
-    </section>
-    <script>
-        function completeTask(taskId) {
-            fetch(`/task/${taskId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+    user = session['user']
+    user_id = user['id']  # Ensure you have user ID in session
+    points_earned = 50
+
+    try:
+        # Update user points in Firebase
+        ref = db.reference(f'users/{user_id}')
+        user_data = ref.get()
+
+        if user_data:
+            current_points = user_data.get('points', 0)
+            updated_points = current_points + points_earned
+
+            ref.update({
+                'points': updated_points
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(`Task completed! You now have ${data.points} points.`);
-                } else {
-                    alert('Error completing task.');
-                }
-            });
-        }
-    </script>
-{% endblock %}
 
+            # Update the session data
+            session['user']['points'] = updated_points
+
+            return jsonify({'success': True, 'points': updated_points})
+        else:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
