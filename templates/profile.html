@@ -1,12 +1,20 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <h1>Profile</h1>
-    <img src="{{ url_for('static', filename='profile_pic.jpg') }}" alt="Profile Picture" class="profile-pic">
-    <p>Username: {{ user_info.username }}</p>
-    <p>Email: {{ user_info.email }}</p>
-    <p>Mobile: {{ user_info.mobile }}</p>
-    <p>Payment Method: {{ user_info.payment_method }}</p>
-    <!-- Add more user details here -->
-{% endblock %}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    <h2>Your Profile</h2>
+    <div>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Mobile Number:</strong> {{ user.mobile_number }}</p>
+        <p><strong>Bkash Number:</strong> {{ user.bkash_number }}</p>
+        <p><strong>Nagad Number:</strong> {{ user.nagad_number }}</p>
+        <p><strong>Points:</strong> {{ user.points }}</p>
+        <p><a href="{{ url_for('logout') }}">Logout</a></p>
+    </div>
+</body>
+</html>
