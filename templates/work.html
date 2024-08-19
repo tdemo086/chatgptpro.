@@ -6,16 +6,34 @@
         <p>Lorem ipsum tasks descriptions.</p>
         <ul>
             <li>Task 1: Lorem ipsum dolor sit.</li>
+            <button onclick="completeTask('task1')">Complete Task 1</button>
             <li>Task 2: Lorem ipsum dolor sit.</li>
+            <button onclick="completeTask('task2')">Complete Task 2</button>
             <li>Task 3: Lorem ipsum dolor sit.</li>
+            <button onclick="completeTask('task3')">Complete Task 3</button>
             <li>Task 4: Lorem ipsum dolor sit.</li>
+            <button onclick="completeTask('task4')">Complete Task 4</button>
             <li>Task 5: Lorem ipsum dolor sit.</li>
+            <button onclick="completeTask('task5')">Complete Task 5</button>
         </ul>
-        <div class="buttons">
-            <button onclick="location.href='{{ url_for('page1') }}'">Go to Page 1</button>
-            <button onclick="location.href='{{ url_for('page2') }}'">Go to Page 2</button>
-            <button onclick="location.href='{{ url_for('page3') }}'">Go to Page 3</button>
-            <button onclick="location.href='{{ url_for('page4') }}'">Go to Page 4</button>
-        </div>
     </section>
+    <script>
+        function completeTask(taskId) {
+            fetch(`/task/${taskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Task completed! You now have ${data.points} points.`);
+                } else {
+                    alert('Error completing task.');
+                }
+            });
+        }
+    </script>
 {% endblock %}
+
