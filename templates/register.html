@@ -1,20 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="register">
-        <h1>Register</h1>
-        <form method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <label for="mobile">Mobile Number:</label>
-            <input type="text" id="mobile" name="mobile" required>
-            <label for="payment_method">Payment Method (Bkash/Nagad):</label>
-            <input type="text" id="payment_method" name="payment_method" required>
-            <button type="submit">Register</button>
-        </form>
-    </section>
+    <h1>Register</h1>
+    <form method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="mobile">Mobile Number:</label>
+        <input type="text" id="mobile" name="mobile" required>
+        <label for="payment_method">Payment Method (Bkash/Nagad):</label>
+        <input type="text" id="payment_method" name="payment_method" required>
+        <button type="submit">Register</button>
+    </form>
 {% endblock %}
+
