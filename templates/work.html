@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="tasks">
+        <h1>Available Tasks</h1>
+        <p>Lorem ipsum tasks descriptions.</p>
+        <ul>
+            <li>Task 1: Lorem ipsum dolor sit.</li>
+            <li>Task 2: Lorem ipsum dolor sit.</li>
+            <li>Task 3: Lorem ipsum dolor sit.</li>
+            <li>Task 4: Lorem ipsum dolor sit.</li>
+            <li>Task 5: Lorem ipsum dolor sit.</li>
+        </ul>
+        <div class="buttons">
+            <button onclick="location.href='{{ url_for('page1') }}'">Go to Page 1</button>
+            <button onclick="location.href='{{ url_for('page2') }}'">Go to Page 2</button>
+            <button onclick="location.href='{{ url_for('page3') }}'">Go to Page 3</button>
+            <button onclick="location.href='{{ url_for('page4') }}'">Go to Page 4</button>
+        </div>
+    </section>
+{% endblock %}
