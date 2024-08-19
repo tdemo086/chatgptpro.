@@ -1,20 +1,30 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}Signin - EarniFy{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block content %}
-<h2 class="text-center">Signin</h2>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        {{ form.email.label }}{{ form.email(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.password.label }}{{ form.password(class="form-control") }}
-    </div>
-    <div class="text-center">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
-</form>
-<p class="text-center mt-3">Don't have an account? <a href="{{ url_for('signup') }}">Signup here</a>.</p>
+<div class="container mt-5">
+    <h2 class="text-center">Sign In</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control") }}
+            {% for error in form.password.errors %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="form-group text-center">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+        <p class="text-center">Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+    </form>
+</div>
 {% endblock %}
