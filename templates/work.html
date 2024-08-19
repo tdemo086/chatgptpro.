@@ -1,63 +1,39 @@
 {% extends 'base.html' %}
 
+{% block title %}Work - EarniFy{% endblock %}
+
 {% block content %}
-<section class="tasks">
-    <h1>Available Tasks</h1>
-    <p>Lorem ipsum tasks descriptions.</p>
-    <ul>
-        <li id="task1">
-            Task 1: Lorem ipsum dolor sit.
-            <button onclick="completeTask('task1')">Complete Task 1</button>
-        </li>
-        <li id="task2">
-            Task 2: Lorem ipsum dolor sit.
-            <button onclick="completeTask('task2')">Complete Task 2</button>
-        </li>
-        <li id="task3">
-            Task 3: Lorem ipsum dolor sit.
-            <button onclick="completeTask('task3')">Complete Task 3</button>
-        </li>
-        <li id="task4">
-            Task 4: Lorem ipsum dolor sit.
-            <button onclick="completeTask('task4')">Complete Task 4</button>
-        </li>
-        <li id="task5">
-            Task 5: Lorem ipsum dolor sit.
-            <button onclick="completeTask('task5')">Complete Task 5</button>
-        </li>
-    </ul>
-</section>
- <a href="{{ url_for('page1') }}">page1</a>
- <a href="{{ url_for('page2') }}">page2</a>
- <a href="{{ url_for('page3') }}">page3</a>
- <a href="{{ url_for('page4') }}">page4</a>
-
-
-
-<script>
-    function completeTask(taskId) {
-        fetch('/work', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'X-CSRFToken': '{{ csrf_token() }}' // Include if using CSRF
-            },
-            body: JSON.stringify({ task_id: taskId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(`Task completed! You now have ${data.points} points.`);
-                // Update UI
-                document.getElementById(taskId).classList.add('completed');
-            } else {
-                alert(data.message || 'Error completing task.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while completing the task.');
-        });
-    }
-</script>
+<h2 class="text-center">Work Page</h2>
+<div class="row">
+    <!-- Task Buttons and Descriptions -->
+    <div class="col-md-6 text-center">
+        <button class="btn btn-primary task-button" onclick="completeTask(this, 'Task 1')">Task 1</button>
+        <p class="task-description">Description for Task 1</p>
+    </div>
+    <div class="col-md-6 text-center">
+        <button class="btn btn-primary task-button" onclick="completeTask(this, 'Task 2')">Task 2</button>
+        <p class="task-description">Description for Task 2</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <button class="btn btn-primary task-button" onclick="completeTask(this, 'Task 3')">Task 3</button>
+        <p class="task-description">Description for Task 3</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 text-center">
+        <button class="btn btn-primary task-button" onclick="completeTask(this, 'Task 4')">Task 4</button>
+        <p class="task-description">Description for Task 4</p>
+    </div>
+    <div class="col-md-6 text-center">
+        <button class="btn btn-primary task-button" onclick="completeTask(this, 'Task 5')">Task 5</button>
+        <p class="task-description">Description for Task 5</p>
+    </div>
+</div>
+<!-- Referral Link Generator -->
+<div class="text-center mt-4">
+    <button class="btn btn-info" onclick="generateReferralLink()">Generate Referral Link</button>
+    <p id="referral-link" style="display: none;">Your referral link: <span id="link"></span></p>
+</div>
 {% endblock %}
