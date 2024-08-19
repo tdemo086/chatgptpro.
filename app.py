@@ -1,12 +1,8 @@
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify
+from google_sheets import save_user_data, get_user_data
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
-
-# Simulate a user store
-users = {}
-points = {}
-referral_links = {}
 
 @app.route('/')
 def home():
@@ -23,10 +19,11 @@ def work():
 def profile():
     if 'username' in session:
         username = session['username']
-        user_info = users.get(username, {})
-        user_points = points.get(username, 0)
-        refer_link = referral_links.get(username, '')
-        return render_template('profile.html', user_info=user_info, points=user_points, refer_link=refer_link)
+        user_info = get_user_data(username)
+        if user_info:
+            return render_template('profile.html', user_info=user_info)
+        else:
+            return "User not found", 404
     else:
         return redirect(url_for('login'))
 
@@ -34,8 +31,9 @@ def profile():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']  # Password validation is omitted for simplicity
-        if username in users:
+        password = request.form['password']  # Basic check
+        user_info = get_user_data(username)
+        if user_info and password == 'expected_password':  # Replace with secure check
             session['username'] = username
             return redirect(url_for('home'))
         else:
@@ -56,10 +54,8 @@ def register():
         mobile = request.form['mobile']
         payment_method = request.form['payment_method']
         
-        # Save user info
-        users[username] = {'email': email, 'password': password, 'mobile': mobile, 'payment_method': payment_method}
-        points[username] = 0
-        referral_links[username] = f"http://yourwebsite.com/referral/{username}"
+        # Save to Google Sheets
+        save_user_data(username, email, mobile, payment_method)
         
         session['username'] = username
         return redirect(url_for('profile'))
@@ -68,11 +64,8 @@ def register():
 @app.route('/task/<task_id>', methods=['POST'])
 def complete_task(task_id):
     if 'username' in session:
-        username = session['username']
-        if username not in points:
-            points[username] = 0
-        points[username] += 50  # Add 50 points for completing a task
-        return jsonify({'success': True, 'points': points[username]})
+        # Logic to handle task completion and points
+        return jsonify({'success': True})
     return jsonify({'success': False}), 403
 
 @app.route('/page1')
@@ -91,12 +84,9 @@ def page3():
 def page4():
     return render_template('page4.html')
 
-@app.route('/level')
-def level():
-    return render_template('level.html')
-
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 
