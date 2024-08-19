@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Mining - GemMine{% endblock %}
+
+{% block content %}
+<section class="mining">
+    <h2>Mine Your Gems!</h2>
+    <div class="mining-tools">
+        <button class="tool">Shovel</button>
+        <button class="tool">Pickaxe</button>
+    </div>
+    <div class="mining-progress">
+        <p>Progress: <span id="progress">50%</span></p>
+        <div class="progress-bar">
+            <div class="progress" style="width: 50%;"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
