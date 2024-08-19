@@ -1,161 +1,140 @@
-/* General styles */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    color: #333;
-    background: linear-gradient(270deg, #ff97423, #ff3e48);
-   background-size: 400% 400%;
-   animation: gradientAnimation 15s ease infinite;
-    height: 100%;
-}
-
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-
-header {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-}
-
-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: space-around;
-}
-
-nav ul li {
-    display: inline;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-    padding: 10px 20px;
-    transition: color 0.3s;
-}
-
-nav ul li a:hover {
-    color: #f06;
+/* Base CSS for Navbar and Footer */
+nav.navbar {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
 }
 
 footer {
-    background-color: rgba(255, 255, 255, 0.8);
-    text-align: center;
-    padding: 20px;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-.hero {
-    text-align: center;
-    padding: 50px 20px;
-}
-
-.tasks, .profile, .login, .register, .levels {
+    background: #333;
+    color: #fff;
     padding: 20px;
     text-align: center;
 }
 
-.profile-pic {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #ddd;
-    margin: 0 auto;
+footer a {
+    color: #fff;
+    text-decoration: none;
 }
 
-.buttons button {
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #48f;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
+footer a:hover {
+    text-decoration: underline;
 }
 
-.buttons button:hover {
-    background-color: #f06;
+/* Home Page Specific Styles */
+.hero-section {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    padding: 50px 0;
+    text-align: center;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    nav ul {
-        flex-direction: column;
-        align-items: center;
+.feature {
+    margin: 30px 0;
+}
+
+.feature img {
+    max-width: 100%;
+    height: auto;
+}
+
+.about-us {
+    background: #fff;
+    color: #333;
+    padding: 30px;
+}
+
+/* Work Page Specific Styles */
+body {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.task-button {
+    margin: 15px 0;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.task-button:hover {
+    transform: scale(1.1);
+    background-color: #ff7f50;
+}
+
+.task-button:disabled {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.task-description {
+    margin-bottom: 20px;
+    font-style: italic;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.styled-hr {
+    border-top: 3px solid #fff;
+    margin: 40px 0;
+    animation: expandHr 1s ease-in-out;
+}
+
+.btn-secondary {
+    background-color: #ff7f50;
+    color: #fff;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.btn-secondary:hover {
+    transform: scale(1.1);
+    background-color: #2575fc;
+}
+
+.btn-info {
+    background-color: #6a11cb;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-info:hover {
+    background-color: #2575fc;
+    color: #fff;
+}
+
+#referral-link {
+    margin-top: 20px;
+    display: none;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
-
-    nav ul li {
-        margin-bottom: 10px;
-    }
-
-    main {
-        padding: 20px;
+    to {
+        opacity: 1;
     }
 }
 
-.level {
+@keyframes expandHr {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+/* Signup/Signin Page Specific Styles */
+.form-group {
     margin-bottom: 20px;
 }
-.page {
-    padding: 20px;
+
+.btn-primary {
+    background-color: #6a11cb;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #2575fc;
+}
+
+.text-center {
     text-align: center;
-}
-
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    background-color: #48f;
-    color: white;
-    text-decoration: none;
-    margin: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.button:hover {
-    background-color: #f06;
-}
-.profile-pic img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-button {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    background-color: #48f;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 5px;
-}
-
-button:hover {
-    background-color: #f06;
-}
-
-input[type="text"], input[type="email"], input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
 }
