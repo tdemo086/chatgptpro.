@@ -3,11 +3,16 @@
 {% block content %}
     <section class="profile">
         <h1>User Profile</h1>
-        <div class="profile-pic"></div>
-        <p>Name: John Doe</p>
-        <p>Email: john@example.com</p>
-        <p>Points: 1500</p>
-        <button onclick="location.href='{{ url_for('level') }}'">View Levels</button>
+        <div class="profile-pic">
+            <!-- You would replace the following with actual profile picture URL -->
+            <img src="{{ url_for('static', filename='default-profile.jpg') }}" alt="Profile Picture">
+        </div>
+        <p>Username: {{ user_info.username }}</p>
+        <p>Email: {{ user_info.email }}</p>
+        <p>Mobile: {{ user_info.mobile }}</p>
+        <p>Payment Method: {{ user_info.payment_method }}</p>
+        <p>Points: {{ points }}</p>
+        <p>Referral Link: <a href="{{ refer_link }}" target="_blank">{{ refer_link }}</a></p>
     </section>
 {% endblock %}
 
