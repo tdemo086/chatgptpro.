@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # For session management
 
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate(r"C:\Users\CCB\Downloads\credentials.json")  
+cred = credentials.Certificate("static\serviceAccountKey.json")  
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://tdemo-d2f6e-default-rtdb.asia-southeast1.firebasedatabase.app/'
 })
