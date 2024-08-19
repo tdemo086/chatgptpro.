@@ -15,6 +15,11 @@ cred = credentials.Certificate('serviceAccountKey.json')
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
+# Configure upload folder
+app.config['UPLOAD_FOLDER'] = 'static/images'
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
 # Forms
 class SignupForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
@@ -67,7 +72,7 @@ def signup():
         # Save profile picture
         if form.profile_picture.data:
             filename = secure_filename(form.profile_picture.data.filename)
-            picture_path = os.path.join('static/images', filename)
+            picture_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             form.profile_picture.data.save(picture_path)
             user_data['profile_picture'] = filename
 
