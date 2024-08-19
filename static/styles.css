@@ -121,3 +121,32 @@ footer {
 .button:hover {
     background-color: #f06;
 }
+.profile-pic img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    background-color: #48f;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #f06;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
