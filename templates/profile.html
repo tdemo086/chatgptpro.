@@ -1,25 +1,19 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Profile - EarniFy{% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
 
-{% block content %}
-<h2 class="text-center">Your Profile</h2>
-<div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-        <img src="{{ url_for('static', filename=user['profile_picture']) }}" class="rounded-circle" alt="Profile Picture" width="150">
-        <h3>{{ user['name'] }}</h3>
+<body>
+    <div class="container">
+        <h2>Welcome, {{ user['name'] }}</h2>
         <p>Email: {{ user['email'] }}</p>
-        <p>Mobile: {{ user['mobile'] }}</p>
-        <p>WhatsApp: {{ user['whatsapp'] }}</p>
-        <p>Bkash/Nagad: {{ user['bkash'] }}</p>
-        <p>Facebook: {{ user['facebook'] }}</p>
-        <p>Date of Birth: {{ user['dob'] }}</p>
+        <img src="{{ user['picture'] }}" alt="Profile Picture">
+        <a href="{{ url_for('logout') }}">Logout</a>
     </div>
-</div>
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6 text-center">
-        <h4>Your Points: {{ user['points'] }}</h4>
-        <h4>Referral Number: {{ user['referral_number'] }}</h4>
-    </div>
-</div>
-{% endblock %}
+</body>
+
+</html>
