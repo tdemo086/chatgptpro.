@@ -4,7 +4,7 @@ CREATE TABLE User (
     username TEXT UNIQUE NOT NULL
 );
 
--- Create the Tweet table
+-- Create the Tweet table with a foreign key constraint referencing the User table
 CREATE TABLE Tweet (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
