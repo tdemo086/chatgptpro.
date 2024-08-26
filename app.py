@@ -11,10 +11,14 @@ ADMIN_PASSWORD = 'adminpass'  # Change this to a secure password
 
 # Helper function to load and save users
 def load_users():
-    if os.path.exists(USERS_FILE):
-        with open(USERS_FILE, 'r') as file:
+    if not os.path.exists(USERS_FILE) or os.path.getsize(USERS_FILE) == 0:
+        return {}
+    with open(USERS_FILE, 'r') as file:
+        try:
             return json.load(file)
-    return {}
+        except json.JSONDecodeError:
+            return {}  # Return an empty dictionary if JSON is invalid
+            
 
 def save_users(users):
     with open(USERS_FILE, 'w') as file:
@@ -44,15 +48,20 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        users = load_users()
-        if username in users:
-            return 'Username already exists'
-        users[username] = password
-        save_users(users)
-        return redirect(url_for('login'))
+        try:
+            username = request.form['username']
+            password = request.form['password']
+            users = load_users()
+            if username in users:
+                return 'Username already exists'
+            users[username] = password
+            save_users(users)
+            return redirect(url_for('login'))
+        except Exception as e:
+            return f"An error occurred: {e}"
     return render_template('register.html')
+    
+
 
 # User logout route
 @app.route('/logout')
