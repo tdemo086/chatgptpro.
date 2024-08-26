@@ -8,7 +8,7 @@ app.secret_key = 'your_secret_key'  # Change this to a random secret key
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate('firebase_service_account_key.json')
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://<your-database-name>.firebaseio.com/'
+    'databaseURL': 'https://dhet-7fc2c-default-rtdb.firebaseio.com/'
 })
 
 # Firebase database reference
@@ -104,3 +104,4 @@ def admin_logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
