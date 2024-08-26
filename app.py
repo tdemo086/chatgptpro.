@@ -1,28 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import json
-import os
+import firebase_admin
+from firebase_admin import credentials, db
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Change this to a random secret key
 
-USERS_FILE = 'users.json'
-ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'adminpass'  # Change this to a secure password
+# Initialize Firebase Admin SDK
+cred = credentials.Certificate('firebase_service_account_key.json')
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://<your-database-name>.firebaseio.com/'
+})
 
-# Helper function to load and save users
-def load_users():
-    if not os.path.exists(USERS_FILE) or os.path.getsize(USERS_FILE) == 0:
-        return {}
-    with open(USERS_FILE, 'r') as file:
-        try:
-            return json.load(file)
-        except json.JSONDecodeError:
-            return {}  # Return an empty dictionary if JSON is invalid
-            
-
-def save_users(users):
-    with open(USERS_FILE, 'w') as file:
-        json.dump(users, file)
+# Firebase database reference
+users_ref = db.reference('/users')
 
 # Home route
 @app.route('/')
@@ -37,8 +27,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        users = load_users()
-        if username in users and users[username] == password:
+        user = users_ref.child(username).get()
+        if user and user['password'] == password:
             session['username'] = username
             return redirect(url_for('home'))
         return 'Invalid credentials'
@@ -51,17 +41,13 @@ def register():
         try:
             username = request.form['username']
             password = request.form['password']
-            users = load_users()
-            if username in users:
+            if users_ref.child(username).get() is not None:
                 return 'Username already exists'
-            users[username] = password
-            save_users(users)
+            users_ref.child(username).set({'password': password})
             return redirect(url_for('login'))
         except Exception as e:
             return f"An error occurred: {e}"
     return render_template('register.html')
-    
-
 
 # User logout route
 @app.route('/logout')
@@ -86,7 +72,7 @@ def admin_login():
 def admin_panel():
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
-    users = load_users()
+    users = users_ref.get()
     return render_template('admin_panel.html', users=users)
 
 # Add a user (admin functionality)
@@ -96,11 +82,9 @@ def add_user():
         return redirect(url_for('admin_login'))
     username = request.form['username']
     password = request.form['password']
-    users = load_users()
-    if username in users:
+    if users_ref.child(username).get() is not None:
         return 'Username already exists'
-    users[username] = password
-    save_users(users)
+    users_ref.child(username).set({'password': password})
     return redirect(url_for('admin_panel'))
 
 # Delete a user (admin functionality)
@@ -108,10 +92,8 @@ def add_user():
 def delete_user(username):
     if 'admin' not in session:
         return redirect(url_for('admin_login'))
-    users = load_users()
-    if username in users:
-        del users[username]
-        save_users(users)
+    if users_ref.child(username).get() is not None:
+        users_ref.child(username).delete()
     return redirect(url_for('admin_panel'))
 
 # Admin logout route
@@ -122,4 +104,3 @@ def admin_logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
