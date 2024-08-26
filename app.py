@@ -1,137 +1,67 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import pyrebase
-import os
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+import firebase_admin
+from firebase_admin import credentials, auth, firestore
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to a random secret key
+app.secret_key = 'your_secret_key'
 
-# Firebase configuration
-firebaseConfig = {
-    "apiKey": "AIzaSyBFu8Ml90MwZNRNiOjDhWZB5HeKQoVsz3M",
-    "authDomain": "dhet-7fc2c.firebaseapp.com",
-    "databaseURL": "https://dhet-7fc2c-default-rtdb.firebaseio.com/",
-    "projectId": "dhet-7fc2c",
-    "storageBucket": "dhet-7fc2c.appspot.com",
-    "messagingSenderId": "972635237801",
-    "appId": "1:972635237801:web:d6e716d6a0de67ea82a8b8",
-    "measurementId": "G-ZXQSWDSEPT"
-}
+# Firebase Admin SDK Initialization
+cred = credentials.Certificate({
+  "type": "service_account",
+  "project_id": "dhet-7fc2c",
+  "private_key_id": "12d1febe034dc7d29522b711dc763b1f5d2ecb46",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDC62hZxo/25Hni\nUEMixToI1knA0vLj7c62sfShKIr+L8HHI1kuJIhwqbEEWV6RdrxKF1XA6Z7eAjr5\n83AA4klr73wZGR5MRjV4ab9EnC/pWs3vtfuD0KGMOj7HPL38/pJxbHFiYbajPvPZ\n31HPukVLjhY7WYzPb9sUhbF676NW2oHYg+0RpVduyBkDjjBRkwAMprFWiR0kvPRu\nHhQ2mIBmS4NyJVZ118uOUPIezaeE15tE0akW4+ATyLu0h19778/3hewlwwGo+BKc\n4auxOPfhOR3ed+/tyWfJmU1sXj7Go+QaXgzawZpoxcdkw8hlV5d3+M226iQ5/ypG\nKKVHBrepAgMBAAECggEARfcBydfALTrtlRKCRqTMpAdnCdOuY6oknOdbi81ltr+l\nqrlBdZKfdvEyHQGHNGeORnoByfERmVbrnHSJK4gOGrQns0qU2YQKBWLPyOzXNcfm\nS7jiwvnMQu1VQ2bGO12Vaykluc6hJA+gr/+8+fc+kFQ8HqmSJZNc7AzhG+OQmcfL\nZ8uDfyawdOYwKtTVxIGG+RPVQ/SQae16kcNriWiCbXiWhLgKahgpQHWJxGkdXFXc\nfdzijO7xI+trCs2s1Fbc3aikKY2XSig9uJGsgXIs1lrTcuk6L2JX/OEs62AMHtMm\nHkKL3+baZK8Yk3BrOQUQCqFFHgPrKvLZg+8NSKvW0QKBgQD8mqEI3z9kINaDHPe8\nKrVKG66WPlsEcjHJ0GyXCTSnKw2yXr8ZNZtXEB6tP6Bj+PsdHBy2M9sLPlulyTmf\nmN2njSjmWsIwHQ4XL7VBwr44IulESyecHnV36KsUc2FiJvpb7VgC3nfqYH9vB+/q\nS3/oM87Mw5oGB7QGgIqA7Ry4twKBgQDFij/sOI5DcpxXmSMMlE7k+Ai1dEUIY91C\nN65MEQIJ1TfEIhWstUKkt6tNQHqCpilx4vTu8wmMf8vnwM+EOpz2Q2M6RCvylqvH\ncVvksh4ixLboysN+8QOsrT9uEr86kt9TJBe7hIz1xb6l/hhxITIsBtDmiRalPSdw\nqMBMwAXynwKBgFy1j8bG0Og52SET36SS9Ch30nLX/eW616UfNsuUGFwGRCej+HUT\nJKkmhGvHf2FRvzAm4i7JB2qv/0jwepKlsyxMdaddxgmMkGBYJSk2hUPrJDvpbWcy\nEqDopumBk0tHzPkyOewLpG1D72Fbw2T1QsOBSDQE0iHGb/827B53Z+QvAoGBAKDg\nJ5D8ujeJ1nOsvpOXEO1+ZrFIYJQlqGMuL5+5VjylzcXIsHg4Im89OaAve9Z89lHO\nsQUNH2CyD2DNcPNSPNR+Kwifzl7BgGJsGpeUy+Aq7n+F6lKue/ycF4VQdTaBuKjg\nQwevOpFKGyraVhOEInUik+y8BppJxJ4GgJ3A4NcnAoGAdS7ELbZkxqHFNEFYI1er\nZd1qB0tn26I9Nnr+Tw4qv4h743khT1bh6tFcJqH6opweff9REfl1EX3KuKWykeRA\nS9AvDTPw1s5eJdl7H6oQ86sE3rOKQ0/TjpsmECgZkcv6xwqvgdBAioBlAv/1/KNV\nXZe7sfgcbxK2b0PJQBHJ1Jw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-a5sbs@dhet-7fc2c.iam.gserviceaccount.com",
+  "client_id": "100644738377023967334",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-a5sbs%40dhet-7fc2c.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+})
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
-# Initialize Firebase
-firebase = pyrebase.initialize_app(firebaseConfig)
-auth = firebase.auth()
-db = firebase.database()
-
-ADMIN_USERNAME = 'admin'
-ADMIN_PASSWORD = 'adminpass'  # Change this to a secure password
-
-# Home route
 @app.route('/')
 def home():
-    if 'username' in session:
-        return render_template('home.html', username=session['username'])
+    if 'user' in session:
+        return render_template('home.html')
     return redirect(url_for('login'))
 
-# User login route
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        
-        # Retrieve user from Firebase Realtime Database
-        user_ref = db.child("users").child(username).get()
-        if user_ref.val() and user_ref.val().get('password') == password:
-            session['username'] = username
-            return redirect(url_for('home'))
-        return 'Invalid credentials'
-    return render_template('login.html')
-
-# User registration route
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
         try:
-            username = request.form['username']
-            password = request.form['password']
-            
-            # Check if the user already exists
-            user_ref = db.child("users").child(username).get()
-            if user_ref.val():
-                return 'Username already exists'
-            
-            # Save the user to Firebase Realtime Database
-            db.child("users").child(username).set({"password": password})
-            
-            # Log the user in by setting the session
-            session['username'] = username
-            
-            # Redirect to the home page
-            return redirect(url_for('home'))
+            user = auth.create_user(
+                email=email,
+                password=password
+            )
+            flash('Registration successful! Please login.', 'success')
+            return redirect(url_for('login'))
         except Exception as e:
-            return f"An error occurred: {e}"
+            flash(f'Error: {str(e)}', 'danger')
     return render_template('register.html')
 
-# User logout route
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        try:
+            user = auth.get_user_by_email(email)
+            session['user'] = user.uid
+            return redirect(url_for('home'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'danger')
+    return render_template('login.html')
+
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('user', None)
+    flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
-
-# Admin login route
-@app.route('/admin/login', methods=['GET', 'POST'])
-def admin_login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-            session['admin'] = True
-            return redirect(url_for('admin_panel'))
-        return 'Invalid admin credentials'
-    return render_template('admin_login.html')
-
-# Admin panel route
-@app.route('/admin/panel')
-def admin_panel():
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))
-    users = db.child("users").get().val()  # Fetch all users from Firebase
-    return render_template('admin_panel.html', users=users)
-
-# Add a user (admin functionality)
-@app.route('/admin/add_user', methods=['POST'])
-def add_user():
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))
-    username = request.form['username']
-    password = request.form['password']
-    
-    # Check if the user already exists
-    user_ref = db.child("users").child(username).get()
-    if user_ref.val():
-        return 'Username already exists'
-    
-    # Save the user to Firebase Realtime Database
-    db.child("users").child(username).set({"password": password})
-    
-    return redirect(url_for('admin_panel'))
-
-# Delete a user (admin functionality)
-@app.route('/admin/delete_user/<username>')
-def delete_user(username):
-    if 'admin' not in session:
-        return redirect(url_for('admin_login'))
-    
-    # Delete the user from Firebase Realtime Database
-    db.child("users").child(username).remove()
-    
-    return redirect(url_for('admin_panel'))
-
-# Admin logout route
-@app.route('/admin/logout')
-def admin_logout():
-    session.pop('admin', None)
-    return redirect(url_for('admin_login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
