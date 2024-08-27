@@ -4,3 +4,4 @@ Flask-Bcrypt
 Flask-Login
 Werkzeug
 gunicorn
+flask_wtf
