@@ -1,3 +1,4 @@
 Flask
-firebase-admin
+Flask-SQLAlchemy
+Werkzeug
 gunicorn
