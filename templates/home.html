@@ -3,18 +3,9 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 class="mt-4">Posts</h1>
-<a href="{{ url_for('post') }}" class="btn btn-primary mb-3">Create a Post</a>
-
-{% for post in posts %}
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">{{ post.name }}</h5>
-            <p class="card-text">{{ post.text }}</p>
-            {% if post.image %}
-                <img src="{{ url_for('static', filename='uploads/' + post.image) }}" alt="Image" class="img-fluid">
-            {% endif %}
-        </div>
-    </div>
-{% endfor %}
+<h1 class="mt-4">Welcome, {{ current_user.username }}</h1>
+{% if current_user.is_admin %}
+    <a href="{{ url_for('admin') }}" class="btn btn-primary mt-3">Admin Panel</a>
+{% endif %}
+<a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Logout</a>
 {% endblock %}
